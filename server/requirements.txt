@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+strawberry-graphql
+pandas
+sqlalchemy
+python-multipart
+openpyxl
+python-dotenv
+pytest
+httpx
+transformers
+huggingface-hub
+python-dotenv
+torch
