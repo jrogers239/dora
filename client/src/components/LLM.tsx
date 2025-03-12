@@ -12,6 +12,7 @@ const LLM: React.FC = () => {
     const [prompt, setPrompt] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [sessionId, setSessionId] = useState<string | null>(null);
     const chatHistoryRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -42,13 +43,19 @@ const LLM: React.FC = () => {
                 },
                 body: JSON.stringify({
                     prompt,
-                    max_length: 100
+                    max_length: 100,
+                    session_id: sessionId
                 })
             });
             
             const data = await response.json();
             const doraMessage: Message = { type: 'dora', content: data.generated_text };
             setMessages(prev => [...prev, doraMessage]);
+            
+            // Store session ID for subsequent requests
+            if (data.session_id && !sessionId) {
+                setSessionId(data.session_id);
+            }
         } catch (error) {
             const errorMessage: Message = { type: 'dora', content: `Error: ${error}` };
             setMessages(prev => [...prev, errorMessage]);
@@ -97,6 +104,9 @@ const LLM: React.FC = () => {
                         <div className="bubble-container">
                             <div className="message-bubble">
                                 {message.content}
+                                {isLoading && index === messages.length - 1 && message.type === 'user' && (
+                                    <div className="loading-indicator">...</div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -109,8 +119,9 @@ const LLM: React.FC = () => {
                     onChange={handleTextAreaInput}
                     onKeyPress={handleKeyPress}
                     placeholder="Type your message..."
+                    disabled={isLoading}
                 />
-                <button type="submit" className="send-button">
+                <button type="submit" className="send-button" disabled={isLoading || !prompt.trim()}>
                     <FontAwesomeIcon icon={faPaperPlane} />
                 </button>
             </form>

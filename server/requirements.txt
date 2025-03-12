@@ -12,3 +12,10 @@ transformers
 huggingface-hub
 python-dotenv
 torch
+langchain
+redis
+langchain-redis
+sentence-transformers
+langchain-google-genai
+langchain-community
+google-genai
