@@ -1,17 +1,21 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../firebase';
-import { User, signInWithEmailAndPassword, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import { User, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 
 interface AuthContextType {
     user: User | null;
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
+    signup: (email: string, password: string) => Promise<void>;
+    logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
     user: null,
     loading: true,
-    login: async () => {}
+    login: async () => {},
+    signup: async () => {},
+    logout: async () => {}
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -22,15 +26,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setUser(user);
-            } else {
-                // Sign in anonymously if no user
-                signInAnonymously(auth)
-                    .catch((error) => {
-                        console.error("Anonymous auth error:", error);
-                    });
-            }
+            setUser(user);
             setLoading(false);
         });
 
@@ -42,21 +38,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // Call backend to store user in Redis
-            await fetch('/api/storeUser', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ uid: user.uid, email: user.email }),
-            });
+            // User successfully logged in
         } catch (error) {
             console.error("Login error:", error);
+            throw error;
+        }
+    };
+
+    const signup = async (email: string, password: string) => {
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // User successfully signed up
+        } catch (error) {
+            console.error("Signup error:", error);
+            throw error;
+        }
+    };
+
+    const logout = async () => {
+        try {
+            await signOut(auth);
+        } catch (error) {
+            console.error("Logout error:", error);
+            throw error;
         }
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login }}>
+        <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
             {!loading && children}
         </AuthContext.Provider>
     );
