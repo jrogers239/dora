@@ -1,12 +1,8 @@
-fastapi
-uvicorn
-python-dotenv
+-r requirements-base.txt
+
+# ML and LLM dependencies
 sentence-transformers
 langchain
 langchain-google-genai
 langchain-community
-firebase-admin
-pyjwt
-python-multipart
-qdrant-client
 google-genai

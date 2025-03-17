@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+python-dotenv
+firebase-admin
+pyjwt
+python-multipart
+qdrant-client

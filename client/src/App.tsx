@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
 import LLM from './components/LLM';
-import { AuthProvider } from './context/AuthContext';
-import { useAuth } from './context/AuthContext';
+import Auth from './components/Auth/Auth';
+import { AuthProvider, useAuth } from './components/Auth/AuthContext';
 
 // Loading component
 const Loading = () => (
@@ -13,7 +13,7 @@ const Loading = () => (
 
 // Main App content
 const AppContent = () => {
-  const { loading } = useAuth();
+  const { loading, user } = useAuth();
 
   if (loading) {
     return <Loading />;
@@ -21,12 +21,11 @@ const AppContent = () => {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Dora AI Assistant</h1>
-      </header>
-      <main>
+      {user ? (
         <LLM />
-      </main>
+      ) : (
+        <Auth />
+      )}
     </div>
   );
 };
