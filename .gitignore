@@ -78,3 +78,5 @@ Thumbs.db
 # Server specific
 /server/.env
 /server/__pycache__/
+/server/dora-firebase-key.json
+/

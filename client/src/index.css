@@ -1,24 +1,152 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #2c2c2c;
-  color: #ffffff;
-  overflow: hidden;
+@import './css/base-styles.css';
+
+/* Modern CSS Reset and Global Styles */
+:root {
+    color-scheme: dark;
+    accent-color: var(--accent-color);
 }
 
+html {
+    overflow-y: scroll;
+    /* Prevent scroll jumps when showing/hiding content */
+    scrollbar-gutter: stable;
+    /* Apply smooth scrolling except for those who prefer reduced motion */
+    @media (prefers-reduced-motion: no-preference) {
+        scroll-behavior: smooth;
+    }
+}
+
+body {
+    min-height: 100dvh;
+    background-color: var(--primary-bg);
+    color: var(--text-primary);
+}
+
+/* Improve media defaults */
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Remove built-in form typography styles */
+input, button, textarea, select {
+    font: inherit;
+}
+
+/* Avoid text overflows */
+p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+/* Create a root stacking context */
 #root {
-  height: 100%;
-  width: 100%;
+    isolation: isolate;
+    height: 100dvh;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Remove all animations and transitions for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Touch device enhancements */
+@media (hover: none) {
+    /* Improve touch targets */
+    a[href],
+    button,
+    input[type="submit"],
+    input[type="button"],
+    input[type="reset"] {
+        min-height: var(--touch-target-size);
+        min-width: var(--touch-target-size);
+    }
+
+    /* Prevent double-tap to zoom */
+    a:link,
+    button {
+        touch-action: manipulation;
+    }
+}
+
+/* High contrast mode support */
+@media (forced-colors: active) {
+    :root {
+        --primary-bg: Canvas;
+        --secondary-bg: Canvas;
+        --text-primary: CanvasText;
+        --text-secondary: CanvasText;
+        --accent-color: Highlight;
+        --accent-hover: Highlight;
+    }
+
+    * {
+        border-color: CanvasText;
+    }
+}
+
+/* CSS Reset for consistent cross-browser behavior */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Remove list styles */
+ul[role='list'],
+ol[role='list'] {
+    list-style: none;
+}
+
+/* Set core root defaults */
+html:focus-within {
+    scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+    max-width: 100%;
+    display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
